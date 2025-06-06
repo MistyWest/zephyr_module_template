@@ -1,0 +1,15 @@
+/**
+ * @file native_sim.overlay
+ * @date 20250526
+ * @author flynnty
+ * @copyright flynnty 2025
+ *
+ * @brief
+ * Sim Overlay
+ *
+ */
+
+/ {
+	aliases {
+	};
+};

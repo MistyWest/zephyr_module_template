@@ -1,0 +1,26 @@
+##
+# @file Kconfig
+# @date 20250526
+# @author flynnty
+# @copyright flynnty 2025
+#
+# @brief
+# Test Kconfig
+#
+#
+
+menu "Zephyr"
+source "Kconfig.zephyr"
+endmenu
+
+module = APP
+module-str = APP
+source "subsys/logging/Kconfig.template.log_config"
+
+
+
+rsource "../Kconfig.template"
+
+config APP_TEMPLATE_DRIVER
+	bool "Use Real Time Clock Driver"
+	default n

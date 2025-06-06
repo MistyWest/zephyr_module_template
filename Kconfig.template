@@ -1,0 +1,40 @@
+menu "TEMPLATE"
+
+config APP_TEMPLATE_PRIORITY
+	int "Thread Priority"
+	default 3
+
+config APP_TEMPLATE_DELAY_START_MS
+	int "Thread start delay ms"
+	default 0
+
+config APP_TEMPLATE_STACK_SIZE
+	int "Thread stack size"
+	default 1024
+
+config APP_TEMPLATE_MSGQ_SIZE
+	int "Message queue size"
+	default 5
+
+config APP_TEMPLATE_MSGQ_ALIGN
+	int "Power of 2 msg queue byte alignment"
+	default 4
+
+config APP_TEMPLATE_WDT_TIMEOUT_S
+	int "Watchdog timeout seconds"
+	default 2
+
+config APP_TEMPLATE_MSGQ_TIMEOUT_S
+	int "Wait for message timeout seconds"
+	default 1
+
+config APP_TEMPLATE_SHELL
+	bool "Enable Template Shell Console"
+	default n
+
+# https://docs.zephyrproject.org/latest/services/logging/index.html#logging-in-a-module
+module = APP_TEMPLATE
+module-str = TEMPLATE
+source "subsys/logging/Kconfig.template.log_config"
+
+endmenu # TEMPLATE
