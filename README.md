@@ -112,7 +112,7 @@ Now that new module is renamed you need to Open a Pull Request and update all th
 
 ## Developing the New Module
 
-The new module is not setup for building/developing as a stand alone repo, instead it needs to be imported into the **zephyr_project_template** repo to start development, building and testing of the module.  For the guide on how to do that review the **zephyr_project_template** readme.
+The new module is not setup for building/developing as a stand alone repo, instead it needs to be imported into the **zephyr_project_template** repo to start development, building and testing of the module.  For the guide on how to do that review the [**zephyr_project_template**](https://github.com/MistyWest/zephyr_project_template) readme.
 
 ## Coding Format
 
