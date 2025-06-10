@@ -133,8 +133,7 @@ ZbusMsg zbusMsg;
 For enum this looks like:
 
 ```c
-typedef enum
-{
+typedef enum {
     ENUM_VAL_00 = 0;
     ENUM_VAL_01;
     ENUM_VAL_02;
