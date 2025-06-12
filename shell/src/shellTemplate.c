@@ -5,7 +5,7 @@
  * @copyright flynnty 2025
  *
  * @brief
- * Module Shell for access to the template driver from the Zephyr Shell
+ * Module Shell for access to the driver from the Zephyr Shell
  *
  * @details
  * The shell should only ever interact with the driver through the zbus and not the headers.  This serves
@@ -77,7 +77,7 @@ static int shellTemplateValWrite( const struct shell *shell, size_t argc, char *
     shell_context = shell;
 
     if( argc < 2 ) {
-        shell_error( shell, "Usage: template set <val>" );
+        shell_error( shell, "Usage: set <val>" );
         return -EINVAL;
     }
 
@@ -128,4 +128,4 @@ SHELL_STATIC_SUBCMD_SET_CREATE( sub_list,
     SHELL_SUBCMD_SET_END );
 // clang-format on
 
-SHELL_CMD_REGISTER( template, &sub_list, "Template Commands", NULL );
+SHELL_CMD_REGISTER( shell_template, &sub_list, "Template Commands", NULL );

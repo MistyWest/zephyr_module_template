@@ -38,14 +38,6 @@ cd "$TOP_LVL_DIR" || { echo "❌ Cannot cd to $TOP_LVL_DIR"; exit 1; }
 #### Rename Files #####################################################################################################
 
 
-# Rename the Konfig.module
-if [ ! -f "Kconfig.${DFLT_MODULE_NAME}" ]; then
-    echo "❌ Error: File 'Kconfig.${DFLT_MODULE_NAME}' does not exist in $TOP_LVL_DIR"
-    exit 1
-fi
-mv "Kconfig.${DFLT_MODULE_NAME}" "Kconfig.${NEW_MODULE_NAME_LWR_CML_CASE}"
-echo "✅ Renamed: Kconfig.${DFLT_MODULE_NAME} ➝ Kconfig.${NEW_MODULE_NAME_LWR_CML_CASE}"
-
 # Rename the mainTemplate.c
 if [ ! -f "main${DFLT_MODULE_NAME^}.c" ]; then
     echo "❌ Error: File 'main${DFLT_MODULE_NAME^}.c' does not exist in $TOP_LVL_DIR"
@@ -148,12 +140,12 @@ echo "✅ Renamed: test/src/test${DFLT_MODULE_NAME^}.c ➝ test/src/${NEW_MODULE
 
 
 # Replace all occurrences of module.h with newModuleName.h
-echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}.h' with '${NEW_MODULE_NAME_LWR_CML_CASE}.h' (excluding .git)..."
-grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}.h" | xargs sed -i "s/${DFLT_MODULE_NAME}.h/${NEW_MODULE_NAME_LWR_CML_CASE}.h/g"
+echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}\.h' with '${NEW_MODULE_NAME_LWR_CML_CASE}\.h' (excluding .git)..."
+grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}\.h" | xargs sed -i "s/${DFLT_MODULE_NAME}\.h/${NEW_MODULE_NAME_LWR_CML_CASE}\.h/g"
 
 # Replace all occurrences of module.c with newModuleName.c
-echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}.c' with '${NEW_MODULE_NAME_LWR_CML_CASE}.c' (excluding .git)..."
-grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}.c" | xargs sed -i "s/${DFLT_MODULE_NAME}.c/${NEW_MODULE_NAME_LWR_CML_CASE}.c/g"
+echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}\.c' with '${NEW_MODULE_NAME_LWR_CML_CASE}\.c' (excluding .git)..."
+grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}\.c" | xargs sed -i "s/${DFLT_MODULE_NAME}\.c/${NEW_MODULE_NAME_LWR_CML_CASE}\.c/g"
 
 # Replace all occurrences of moduleInit with newModuleNameInit
 echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}Init' with '${NEW_MODULE_NAME_LWR_CML_CASE}Init' (excluding .git)..."
@@ -203,9 +195,9 @@ grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}_ma
 echo "🔁 Replacing all occurrences of '${MSGQ_FILE^}${DFLT_MODULE_NAME^}*' with '${MSGQ_FILE^}${NEW_MODULE_NAME_UPR_CML_CASE}*' (excluding .git)..."
 grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${MSGQ_FILE^}${DFLT_MODULE_NAME^}" | xargs sed -i "s/${MSGQ_FILE^}${DFLT_MODULE_NAME^}/${MSGQ_FILE^}${NEW_MODULE_NAME_UPR_CML_CASE}/g"
 
-# Replace all occurrences of .template with .newModuleName
-echo "🔁 Replacing all occurrences of '.${DFLT_MODULE_NAME}*' with '.${NEW_MODULE_NAME_LWR_CML_CASE}*' (excluding .git)..."
-grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "\.${DFLT_MODULE_NAME}" | xargs sed -i "s/\.${DFLT_MODULE_NAME}/.${NEW_MODULE_NAME_LWR_CML_CASE}/g"
+# Replace all occurrences of msg.template with msg.newModuleName
+echo "🔁 Replacing all occurrences of 'msg\.${DFLT_MODULE_NAME}*' with 'msg\.${NEW_MODULE_NAME_LWR_CML_CASE}*' (excluding .git)..."
+grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "msg\.${DFLT_MODULE_NAME}" | xargs sed -i "s/msg\.${DFLT_MODULE_NAME}/msg\.${NEW_MODULE_NAME_LWR_CML_CASE}/g"
 
 # Replace all occurrences of templateVal with newModuleNameVal
 echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}Val*' with '${NEW_MODULE_NAME_LWR_CML_CASE}Val*' (excluding .git)..."
@@ -219,6 +211,14 @@ grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}Msg
 echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}_thread_lis*' with '${NEW_MODULE_NAME_LWR_CASE}_thread_lis*' (excluding .git)..."
 grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}_thread_lis" | xargs sed -i "s/${DFLT_MODULE_NAME}_thread_lis/${NEW_MODULE_NAME_LWR_CASE}_thread_lis/g"
 
+# Replace all occurrences of template_shell_lis with newModuleName_shell_lis
+echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}_shell_lis*' with '${NEW_MODULE_NAME_LWR_CASE}_shell_lis*' (excluding .git)..."
+grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}_shell_lis" | xargs sed -i "s/${DFLT_MODULE_NAME}_shell_lis/${NEW_MODULE_NAME_LWR_CASE}_shell_lis/g"
+
+# Replace all occurrences of template_test_lis with newModuleName_test_lis
+echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}_test_lis*' with '${NEW_MODULE_NAME_LWR_CASE}_test_lis*' (excluding .git)..."
+grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}_test_lis" | xargs sed -i "s/${DFLT_MODULE_NAME}_test_lis/${NEW_MODULE_NAME_LWR_CASE}_test_lis/g"
+
 # Replace all occurrences of Template Commands with NewModuleName Commands
 echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME^} Commands*' with '${NEW_MODULE_NAME_LWR_CASE^} Commands*' (excluding .git)..."
 grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME^} Commands" | xargs sed -i "s/${DFLT_MODULE_NAME^} Commands/${NEW_MODULE_NAME_LWR_CASE^} Commands/g"
@@ -227,6 +227,14 @@ grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME^} C
 echo "🔁 Replacing all occurrences of 'Test ${DFLT_MODULE_NAME^}*' with 'Test ${NEW_MODULE_NAME_LWR_CASE^}*' (excluding .git)..."
 grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "Test ${DFLT_MODULE_NAME^}" | xargs sed -i "s/Test ${DFLT_MODULE_NAME^}/Test ${NEW_MODULE_NAME_LWR_CASE^}/g"
 
-# Replace all occurrences of template with newModuleName
-echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}*' with '${NEW_MODULE_NAME_LWR_CASE}*' (excluding .git)..."
-grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}" | xargs sed -i "s/${DFLT_MODULE_NAME}/${NEW_MODULE_NAME_LWR_CASE}/g"
+# Replace all occurrences of test_template with test_newModuleName
+echo "🔁 Replacing all occurrences of 'test_${DFLT_MODULE_NAME}*' with 'test_${NEW_MODULE_NAME_LWR_CASE}*' (excluding .git)..."
+grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "test_${DFLT_MODULE_NAME}" | xargs sed -i "s/test_${DFLT_MODULE_NAME}/test_${NEW_MODULE_NAME_LWR_CASE}/g"
+
+# Replace all occurrences of template.tester with NewModuleName.tester
+echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}\.tester*' with '${NEW_MODULE_NAME_LWR_CML_CASE}\.tester*' (excluding .git)..."
+grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}\.tester" | xargs sed -i "s/${DFLT_MODULE_NAME}\.tester/${NEW_MODULE_NAME_LWR_CML_CASE}\.tester/g"
+
+# Replace all occurrences of shell_template with new_module_name
+echo "🔁 Replacing all occurrences of 'shell_${DFLT_MODULE_NAME}*' with '${NEW_MODULE_NAME_LWR_CASE}*' (excluding .git)..."
+grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "shell_${DFLT_MODULE_NAME}" | xargs sed -i "s/shell_${DFLT_MODULE_NAME}/${NEW_MODULE_NAME_LWR_CASE}/g"

@@ -19,7 +19,7 @@ source "subsys/logging/Kconfig.template.log_config"
 
 
 
-rsource "../Kconfig.template"
+rsource "../Kconfig"
 
 config APP_TEMPLATE_DRIVER
 	bool "Use Real Time Clock Driver"

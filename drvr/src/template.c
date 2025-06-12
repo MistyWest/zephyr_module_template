@@ -61,13 +61,13 @@ ErrCode templateValZbusPublish( void )
 
     ret = templateValRead( &templateMsg.val );
     if( ret < ERR_OK ) {
-        LOG_ERR( "Failed to read template val: %d\n", ret );
+        LOG_ERR( "Failed to read val: %d\n", ret );
         return ret;
     }
 
     ret = zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_SUB, &templateMsg, K_NO_WAIT );
     if( ret < ERR_OK ) {
-        LOG_ERR( "Failed to publish template val: %d\n", ret );
+        LOG_ERR( "Failed to publish val: %d\n", ret );
         return ret;
     }
 

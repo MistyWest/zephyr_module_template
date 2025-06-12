@@ -39,7 +39,6 @@ static void zbusListenerCbWait();
 LOG_MODULE_REGISTER( test_module, LOG_LEVEL_DBG );
 
 ZBUS_LISTENER_DEFINE( template_test_lis, zbusListenerCb );
-// Request to set Template Val
 ZBUS_CHAN_ADD_OBS( ZBUS_CHAN_TEMPLATE_VAL_SUB, template_test_lis, 0 );
 
 /**** Definitions *****************************************************************************************************/
@@ -73,53 +72,41 @@ void zbusListenerCbWait()
     zbusCbFired = false;
 }
 
-ZTEST( template, test_template_hdr_init_val )
+ZTEST( test_template, test_template_hdr_init_val )
 {
     templateValRead( &getVal );
-    zassert_equal( getVal, 0, "Test template hrd init val [ set:%d | get:%d ]", 0, getVal );
+    zassert_equal( getVal, 0, "Test hrd init val [ set:%d | get:%d ]", 0, getVal );
 }
 
-ZTEST( template, test_template_hdr_read_write_val )
+ZTEST( test_template, test_template_hdr_read_write_val )
 {
     for( uint16_t setVal = 0; setVal < UINT16_MAX; setVal++ ) {
         templateValWrite( setVal );
         templateValRead( &getVal );
-        zassert_equal( getVal, setVal, "Test template hrd write/read val [ set:%d | get:%d ]", setVal, getVal );
+        zassert_equal( getVal, setVal, "Test hrd write/read val [ set:%d | get:%d ]", setVal, getVal );
     }
 }
 
-ZTEST( template, test_template_zbus_init_val )
+ZTEST( test_template, test_template_zbus_init_val )
 {
-    ZbusMsgTemplate template = { 0 };
-    zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &template, K_NO_WAIT );
+    ZbusMsgTemplate zbusMsg = { 0 };
+    zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &zbusMsg, K_NO_WAIT );
     zbusListenerCbWait();
 
-    zassert_equal( getVal, 0, "Test template zbus init val [ set:%d | get:%d ]", 0, getVal );
+    zassert_equal( getVal, 0, "Test zbus init val [ set:%d | get:%d ]", 0, getVal );
 }
 
-ZTEST( template, test_template_zbus_read_write_val )
+ZTEST( test_template, test_template_zbus_read_write_val )
 {
-    ZbusMsgTemplate template = { 0 };
-
-    //TODO: This version times out suggesting it is much slower than the header access version
-    // for( uint16_t setVal = 0; setVal < UINT16_MAX; setVal++ ) {
-    //     template.val = setVal;
-    //     zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_SET, &template, K_NO_WAIT );
-    //     zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &template, K_NO_WAIT );
-    //     zbusListenerCbWait();
-    //     if( getVal != setVal ) {
-    //         status = false;
-    //     }
-    // }
-    // zassert_true( status, "Test template zbus write/read val don't match" );
+    ZbusMsgTemplate zbusMsg = { 0 };
 
     uint16_t setVal = 100;
-    template.val = setVal;
-    zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_SET, &template, K_NO_WAIT );
-    zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &template, K_NO_WAIT );
+    zbusMsg.val = setVal;
+    zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_SET, &zbusMsg, K_NO_WAIT );
+    zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &zbusMsg, K_NO_WAIT );
     zbusListenerCbWait();
 
-    zassert_equal( getVal, setVal, "Test template zbus write/read val [ set:%d | get:%d ]", setVal, getVal );
+    zassert_equal( getVal, setVal, "Test zbus write/read val [ set:%d | get:%d ]", setVal, getVal );
 }
 
-ZTEST_SUITE( template, NULL, testSetup, NULL, testTeardown, NULL );
+ZTEST_SUITE( test_template, NULL, testSetup, NULL, testTeardown, NULL );

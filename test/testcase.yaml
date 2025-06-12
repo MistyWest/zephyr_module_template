@@ -1,11 +1,11 @@
 tests:
-  module.tester:
+  template.tester:
     sysbuild: true
     platform_allow:
       - native_sim
     integration_platforms:
       - native_sim
     tags:
-      - template_test
+      - test_template
       - zbus
       - sysbuild
