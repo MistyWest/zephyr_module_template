@@ -24,11 +24,11 @@
  *
  * @return int
  */
-ErrCode wdtTemplateInit();
+enum ErrCode_e wdtTemplateInit();
 
 /**
  * @brief Feed WDT
  *
  * @return int
  */
-ErrCode wdtTemplateFeed();
+enum ErrCode_e wdtTemplateFeed();

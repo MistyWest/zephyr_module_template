@@ -27,7 +27,7 @@ LOG_MODULE_DECLARE( template_main, CONFIG_APP_TEMPLATE_LOG_LEVEL );
 /**** Prototypes ******************************************************************************************************/
 /**** Definitions *****************************************************************************************************/
 
-ErrCode templateInit()
+enum ErrCode_e templateInit()
 {
     int ret = ERR_OK;
 
@@ -36,7 +36,7 @@ ErrCode templateInit()
     return ret;
 }
 
-ErrCode templateValRead( uint16_t *val )
+enum ErrCode_e templateValRead( uint16_t *val )
 {
     int ret = ERR_OK;
 
@@ -45,7 +45,7 @@ ErrCode templateValRead( uint16_t *val )
     return ret;
 }
 
-ErrCode templateValWrite( uint16_t val )
+enum ErrCode_e templateValWrite( uint16_t val )
 {
     int ret = ERR_OK;
 
@@ -54,7 +54,7 @@ ErrCode templateValWrite( uint16_t val )
     return ret;
 }
 
-ErrCode templateValZbusPublish( void )
+enum ErrCode_e templateValZbusPublish( void )
 {
     int ret = ERR_OK;
     ZbusMsgTemplate templateMsg = { 0 };

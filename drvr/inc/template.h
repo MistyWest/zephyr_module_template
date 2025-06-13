@@ -25,14 +25,14 @@
  *
  * @return int
  */
-ErrCode templateInit( void );
+enum ErrCode_e templateInit( void );
 
 /**
  * @brief Read Module Val
  *
  * @return ErrCode
  */
-ErrCode templateValRead( uint16_t *val );
+enum ErrCode_e templateValRead( uint16_t *val );
 
 /**
  * @brief Write Module Val
@@ -40,11 +40,11 @@ ErrCode templateValRead( uint16_t *val );
  * @param val
  * @return ErrCode
  */
-ErrCode templateValWrite( uint16_t val );
+enum ErrCode_e templateValWrite( uint16_t val );
 
 /**
  * @brief Publish Module Val
  *
  * @return ErrCode
  */
-ErrCode templateValZbusPublish( void );
+enum ErrCode_e templateValZbusPublish( void );
