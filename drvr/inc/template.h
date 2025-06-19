@@ -25,26 +25,26 @@
  *
  * @return int
  */
-ErrCode templateInit( void );
+int templateInit( void );
 
 /**
  * @brief Read Module Val
  *
- * @return ErrCode
+ * @return int
  */
-ErrCode templateValRead( uint16_t *val );
+int templateValRead( uint16_t *val );
 
 /**
  * @brief Write Module Val
  *
  * @param val
- * @return ErrCode
+ * @return int
  */
-ErrCode templateValWrite( uint16_t val );
+int templateValWrite( uint16_t val );
 
 /**
  * @brief Publish Module Val
  *
- * @return ErrCode
+ * @return int
  */
-ErrCode templateValZbusPublish( void );
+int templateValZbusPublish( void );

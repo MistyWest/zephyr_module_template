@@ -24,11 +24,11 @@
  *
  * @return int
  */
-ErrCode wdtTemplateInit();
+int wdtTemplateInit();
 
 /**
  * @brief Feed WDT
  *
  * @return int
  */
-ErrCode wdtTemplateFeed();
+int wdtTemplateFeed();

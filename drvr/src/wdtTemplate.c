@@ -42,7 +42,7 @@ void wdtTimeoutCb( int chanId, void *userData )
     LOG_ERR( "Watchdog expired, Channel: %d, Thread: %s", chanId, k_thread_name_get( (k_tid_t)userData ) );
 }
 
-ErrCode wdtTemplateInit()
+int wdtTemplateInit()
 {
     int ret = ERR_OK;
 
@@ -56,7 +56,7 @@ ErrCode wdtTemplateInit()
     return ERR_OK;
 }
 
-ErrCode wdtTemplateFeed()
+int wdtTemplateFeed()
 {
     int ret = ERR_OK;
 
