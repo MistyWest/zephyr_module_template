@@ -1,0 +1,3 @@
+compatible: "misty,template-instance"
+
+description: Individual template instance configuration.
