@@ -20,6 +20,9 @@
 #include <zephyr/shell/shell.h>
 
 /**** Defines *********************************************************************************************************/
+#define TEMPLATE_GROUP_NODE DT_NODELABEL( values )
+#define TEMPLATE_CNT        DT_PROP_LEN( TEMPLATE_GROUP_NODE, values )
+
 /**** Types ***********************************************************************************************************/
 /**** Variables *******************************************************************************************************/
 static const struct shell *shell_context;
@@ -28,7 +31,7 @@ static bool zbusCbFired = false;
 
 /**** Prototypes ******************************************************************************************************/
 static void zbusListenerCb( const struct zbus_channel *chan );
-static void zbusListenerCbWait();
+static int zbusListenerCbWait();
 static int shellTemplateValRead( const struct shell *shell, size_t argc, char **argv );
 static int shellTemplateValWrite( const struct shell *shell, size_t argc, char **argv );
 static int shellTemplateTest( const struct shell *shell, size_t argc, char **argv );
@@ -52,12 +55,18 @@ void zbusListenerCb( const struct zbus_channel *chan )
     zbusCbFired = true;
 }
 
-void zbusListenerCbWait()
+int zbusListenerCbWait()
 {
-    while( !zbusCbFired ) {
+    int16_t timeout = 1000;
+
+    while( !zbusCbFired && timeout ) {
         k_sleep( K_MSEC( 1 ) );
+        if( --timeout <= 0 ) {
+            return 1;
+        }
     }
     zbusCbFired = false;
+    return 0;
 }
 
 static int shellTemplateValRead( const struct shell *shell, size_t argc, char **argv )
@@ -82,9 +91,12 @@ static int shellTemplateValRead( const struct shell *shell, size_t argc, char **
     zbusMsg.type = idx;
 
     zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &zbusMsg, K_NO_WAIT );
-    zbusListenerCbWait();
+    if( zbusListenerCbWait() ) {
+        shell_print( shell_context, "Timeout, value not received\n" );
 
-    shell_print( shell_context, "template:%d, val:%d", idx, getVal );
+    } else {
+        shell_print( shell_context, "template:%d, val:%d", idx, getVal );
+    }
 
     return 0;
 }
@@ -128,15 +140,18 @@ static int shellTemplateTest( const struct shell *shell, size_t argc, char **arg
     bool status = true;
     ZbusMsgTemplate zbusMsg = { 0 };
 
-    for( uint16_t setVal = 0; setVal < UINT16_MAX; setVal++ ) {
-        zbusMsg.val = setVal;
-        zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_SET, &zbusMsg, K_NO_WAIT );
-        zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &zbusMsg, K_NO_WAIT );
-        zbusListenerCbWait();
+    for( int i = 0; i < TEMPLATE_CNT; i++ ) {
+        for( uint16_t setVal = 0; setVal < UINT16_MAX; setVal++ ) {
+            zbusMsg.val = setVal;
+            zbusMsg.type = i;
+            zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_SET, &zbusMsg, K_NO_WAIT );
+            zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &zbusMsg, K_NO_WAIT );
+            zbusListenerCbWait();
 
-        if( getVal != setVal ) {
-            status = false;
-            break;
+            if( getVal != setVal ) {
+                status = false;
+                break;
+            }
         }
     }
 
@@ -147,8 +162,8 @@ static int shellTemplateTest( const struct shell *shell, size_t argc, char **arg
 
 // clang-format off
 SHELL_STATIC_SUBCMD_SET_CREATE( sub_list,
-    SHELL_CMD( get_val, NULL, "Get Val", shellTemplateValRead ),
-    SHELL_CMD( set_val, NULL, "Set Val", shellTemplateValWrite ),
+    SHELL_CMD( read, NULL, "Read Value", shellTemplateValRead ),
+    SHELL_CMD( write, NULL, "Write Value", shellTemplateValWrite ),
     SHELL_CMD( test, NULL, "Test Template", shellTemplateTest ),
     SHELL_SUBCMD_SET_END );
 // clang-format on

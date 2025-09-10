@@ -26,17 +26,24 @@
 
 #define TEMPLATE_GROUP_NODE DT_NODELABEL( values )
 #define TEMPLATE_CNT        DT_PROP_LEN( TEMPLATE_GROUP_NODE, values )
+#define TEMPLATE_NODE( i )  DT_PHANDLE_BY_IDX( TEMPLATE_GROUP_NODE, values, i )
+
+#define TEMPLATE_LABEL_GET( n, _ ) DT_PROP( TEMPLATE_NODE( n ), label ),
+#define TEMPLATE_VALUE_GET( n, _ ) DT_PROP( TEMPLATE_NODE( n ), value ),
 
 /**** Types ***********************************************************************************************************/
 /**** Variables *******************************************************************************************************/
-static uint16_t getVal;
+static uint32_t getVal;
 static bool zbusCbFired = false;
+
+// grab individual button settings from the overlay config
+static const uint32_t templateValues[] = { LISTIFY( TEMPLATE_CNT, TEMPLATE_VALUE_GET, () ) };
 
 /**** Prototypes ******************************************************************************************************/
 static void *testSetup( void );
 static void testTeardown( void * );
 static void zbusListenerCb( const struct zbus_channel *chan );
-static void zbusListenerCbWait();
+static int zbusListenerCbWait();
 
 /**** Macros **********************************************************************************************************/
 
@@ -49,6 +56,9 @@ ZBUS_CHAN_ADD_OBS( ZBUS_CHAN_TEMPLATE_VAL_SUB, template_test_lis, 0 );
 
 static void *testSetup( void )
 {
+    // Give the template driver time to init
+    k_sleep( K_MSEC( 1000 ) );
+
     return NULL;
 }
 
@@ -68,49 +78,69 @@ void zbusListenerCb( const struct zbus_channel *chan )
     zbusCbFired = true;
 }
 
-void zbusListenerCbWait()
+int zbusListenerCbWait()
 {
-    while( !zbusCbFired ) {
+    int16_t timeout = 1000;
+
+    while( !zbusCbFired && timeout ) {
         k_sleep( K_MSEC( 1 ) );
+        if( --timeout <= 0 ) {
+            return 1;
+        }
     }
     zbusCbFired = false;
+    return 0;
 }
 
 ZTEST( test_template, test_template_hdr_init_val )
 {
-    templateValRead( &getVal );
-    zassert_equal( getVal, 0, "Test hrd init val [ set:%d | get:%d ]", 0, getVal );
+    templateInit();
+
+    for( int i = 0; i < TEMPLATE_CNT; i++ ) {
+        templateValRead( i, &getVal );
+        zassert_equal( getVal, templateValues[i], "Test hrd init val [ set:%d | get:%d ]", templateValues[i], getVal );
+    }
 }
 
 ZTEST( test_template, test_template_hdr_read_write_val )
 {
-    for( uint16_t setVal = 0; setVal < UINT16_MAX; setVal++ ) {
-        templateValWrite( setVal );
-        templateValRead( &getVal );
-        zassert_equal( getVal, setVal, "Test hrd write/read val [ set:%d | get:%d ]", setVal, getVal );
+    for( int i = 0; i < TEMPLATE_CNT; i++ ) {
+        for( uint16_t setVal = 0; setVal < UINT16_MAX; setVal++ ) {
+            templateValWrite( i, setVal );
+            templateValRead( i, &getVal );
+            zassert_equal( getVal, setVal, "Test hrd write/read val [ set:%d | get:%d ]", setVal, getVal );
+        }
     }
 }
 
 ZTEST( test_template, test_template_zbus_init_val )
 {
-    ZbusMsgTemplate zbusMsg = { 0 };
-    zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &zbusMsg, K_NO_WAIT );
-    zbusListenerCbWait();
+    templateInit();
 
-    zassert_equal( getVal, 0, "Test zbus init val [ set:%d | get:%d ]", 0, getVal );
+    for( int i = 0; i < TEMPLATE_CNT; i++ ) {
+        ZbusMsgTemplate zbusMsg = { 0 };
+        zbusMsg.type = i;
+
+        zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &zbusMsg, K_NO_WAIT );
+        zbusListenerCbWait();
+
+        zassert_equal( getVal, templateValues[i], "Test hrd init val [ set:%d | get:%d ]", templateValues[i], getVal );
+    }
 }
 
 ZTEST( test_template, test_template_zbus_read_write_val )
 {
     ZbusMsgTemplate zbusMsg = { 0 };
-
-    uint16_t setVal = 100;
-    zbusMsg.val = setVal;
-    zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_SET, &zbusMsg, K_NO_WAIT );
-    zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &zbusMsg, K_NO_WAIT );
-    zbusListenerCbWait();
-
-    zassert_equal( getVal, setVal, "Test zbus write/read val [ set:%d | get:%d ]", setVal, getVal );
+    for( int i = 0; i < TEMPLATE_CNT; i++ ) {
+        for( uint8_t setVal = 0; setVal < UINT8_MAX; setVal++ ) {
+            uint8_t setVal = i;
+            zbusMsg.val = setVal;
+            zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_SET, &zbusMsg, K_NO_WAIT );
+            zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &zbusMsg, K_NO_WAIT );
+            zbusListenerCbWait();
+            zassert_equal( getVal, setVal, "Test zbus write/read val [ set:%d | get:%d ]", setVal, getVal );
+        }
+    }
 }
 
 ZTEST_SUITE( test_template, NULL, testSetup, NULL, testTeardown, NULL );
