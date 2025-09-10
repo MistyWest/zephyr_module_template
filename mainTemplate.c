@@ -62,8 +62,7 @@ static void templateMain( void )
 
         ret = msgqTemplateProc();
         if( ret < ERR_OK ) {
-            LOG_ERR( "Failed to process time msgq: %d", ret );
-            return;
+            LOG_ERR( "Failed to process template msgq: %d", ret );
         }
     }
 }

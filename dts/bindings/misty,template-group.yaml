@@ -1,0 +1,9 @@
+compatible: "misty,template-group"
+
+description: Template demo for passing multiple values to the template.
+
+properties:
+  values:
+    type: phandle-array
+    required: true
+    description: Array of phandles to template-instance nodes.

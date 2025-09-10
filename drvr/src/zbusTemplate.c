@@ -64,6 +64,7 @@ void zbusListenerCb( const struct zbus_channel *chan )
         ret = k_msgq_put( msgqTemplate(), &msgq, K_NO_WAIT );
     } else if( chan == &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ ) {
         msgq.type = MSGQ_TYPE_ZBUS_TEMPLATE_VAL_PUB;
+        msgq.msg.zbus.msg.template = *(ZbusMsgTemplate *)zbus_chan_const_msg( chan );
         ret = k_msgq_put( msgqTemplate(), &msgq, K_NO_WAIT );
     }
 
