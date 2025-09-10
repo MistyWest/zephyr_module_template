@@ -48,13 +48,13 @@ int msgqTemplateProc( void )
     // Here we have a valid message to process
     switch( msgq.type ) {
     case MSGQ_TYPE_ZBUS_TEMPLATE_VAL_SET:
-        ret = templateValWrite( msgq.msg.zbus.msg.template.val );
+        ret = templateValWrite( msgq.msg.zbus.msg.template.type, msgq.msg.zbus.msg.template.val );
         if( ret != ERR_OK ) {
             LOG_ERR( "Error Setting Template Val received from Zbus" );
         }
         break;
     case MSGQ_TYPE_ZBUS_TEMPLATE_VAL_PUB:
-        ret = templateValZbusPublish();
+        ret = templateValZbusPublish( msgq.msg.zbus.msg.template.type );
         if( ret != ERR_OK ) {
             LOG_ERR( "Error Publishing Template Val to Zbus" );
         }

@@ -16,6 +16,14 @@
 
 /**** Defines *********************************************************************************************************/
 /**** Types ***********************************************************************************************************/
+
+// Exposing button configuration type so we can access it from local module unit tests
+typedef struct
+{
+    uint32_t value;
+    const char *label;
+} template_t;
+
 /**** Variables *******************************************************************************************************/
 /**** Macros **********************************************************************************************************/
 /**** Prototypes ******************************************************************************************************/
@@ -32,7 +40,7 @@ int templateInit( void );
  *
  * @return int
  */
-int templateValRead( uint16_t *val );
+int templateValRead( uint32_t idx, uint32_t *val );
 
 /**
  * @brief Write Module Val
@@ -40,11 +48,11 @@ int templateValRead( uint16_t *val );
  * @param val
  * @return int
  */
-int templateValWrite( uint16_t val );
+int templateValWrite( uint32_t idx, uint32_t val );
 
 /**
  * @brief Publish Module Val
  *
  * @return int
  */
-int templateValZbusPublish( void );
+int templateValZbusPublish( uint32_t idx );

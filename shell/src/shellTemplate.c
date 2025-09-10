@@ -63,11 +63,28 @@ void zbusListenerCbWait()
 static int shellTemplateValRead( const struct shell *shell, size_t argc, char **argv )
 {
     shell_context = shell;
+
+    if( argc < 2 ) {
+        shell_error( shell, "Usage: get <idx>" );
+        return -EINVAL;
+    }
+
+    errno = 0;
+    char *endptr;
+    uint32_t idx = (uint16_t)strtoul( argv[1], &endptr, 10 );
+
+    if( errno != 0 || *endptr != '\0' ) {
+        shell_error( shell, "Invalid idx: %s", argv[1] );
+        return -EINVAL;
+    }
+
     ZbusMsgTemplate zbusMsg = { 0 };
+    zbusMsg.type = idx;
+
     zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &zbusMsg, K_NO_WAIT );
     zbusListenerCbWait();
 
-    shell_print( shell_context, "val:%d", getVal );
+    shell_print( shell_context, "template:%d, val:%d", idx, getVal );
 
     return 0;
 }
@@ -76,22 +93,30 @@ static int shellTemplateValWrite( const struct shell *shell, size_t argc, char *
 {
     shell_context = shell;
 
-    if( argc < 2 ) {
-        shell_error( shell, "Usage: set <val>" );
+    if( argc < 3 ) {
+        shell_error( shell, "Usage: set <idx> <val>" );
         return -EINVAL;
     }
 
     errno = 0;
     char *endptr;
-    uint16_t val = (uint16_t)strtoul( argv[1], &endptr, 10 );
+    uint32_t idx = (uint16_t)strtoul( argv[1], &endptr, 10 );
 
     if( errno != 0 || *endptr != '\0' ) {
-        shell_error( shell, "Invalid val: %s", argv[1] );
+        shell_error( shell, "Invalid idx: %s", argv[1] );
+        return -EINVAL;
+    }
+
+    uint32_t val = (uint16_t)strtoul( argv[2], &endptr, 10 );
+
+    if( errno != 0 || *endptr != '\0' ) {
+        shell_error( shell, "Invalid val: %s", argv[2] );
         return -EINVAL;
     }
 
     ZbusMsgTemplate zbusMsg = { 0 };
     zbusMsg.val = val;
+    zbusMsg.type = idx;
     zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_SET, &zbusMsg, K_NO_WAIT );
 
     return 0;
@@ -128,4 +153,4 @@ SHELL_STATIC_SUBCMD_SET_CREATE( sub_list,
     SHELL_SUBCMD_SET_END );
 // clang-format on
 
-SHELL_CMD_REGISTER( shell_template, &sub_list, "Template Commands", NULL );
+SHELL_CMD_REGISTER( template, &sub_list, "Template Commands", NULL );

@@ -15,11 +15,23 @@
 #include "zbusCommon.h"
 #include <errno.h>
 #include <zephyr/logging/log.h>
+#include <zephyr/sys/util.h>
 
 /**** Defines *********************************************************************************************************/
+#define TEMPLATE_GROUP_NODE DT_NODELABEL( values )
+#define TEMPLATE_CNT        DT_PROP_LEN( TEMPLATE_GROUP_NODE, values )
+#define TEMPLATE_NODE( i )  DT_PHANDLE_BY_IDX( TEMPLATE_GROUP_NODE, values, i )
+
+#define TEMPLATE_LABEL_GET( n, _ ) DT_PROP( TEMPLATE_NODE( n ), label ),
+#define TEMPLATE_VALUE_GET( n, _ ) DT_PROP( TEMPLATE_NODE( n ), value ),
+
 /**** Types ***********************************************************************************************************/
 /**** Variables *******************************************************************************************************/
-static uint16_t templateVal;
+static template_t templates[TEMPLATE_CNT] = { 0 };
+
+// grab individual button settings from the overlay config
+static const char *templateLabels[] = { LISTIFY( TEMPLATE_CNT, TEMPLATE_LABEL_GET, () ) };
+static const uint32_t templateValues[] = { LISTIFY( TEMPLATE_CNT, TEMPLATE_VALUE_GET, () ) };
 
 /**** Macros **********************************************************************************************************/
 LOG_MODULE_DECLARE( template_main, CONFIG_APP_TEMPLATE_LOG_LEVEL );
@@ -31,35 +43,51 @@ int templateInit()
 {
     int ret = ERR_OK;
 
-    templateVal = 0;
+    for( int i = 0; i < TEMPLATE_CNT; i++ ) {
+        template_t *temp = &templates[i];
+        temp->value = templateValues[i];
+        temp->label = templateLabels[i];
+        LOG_DBG( "Template(%d) %s init value %d", i, temp->label, temp->value );
+    }
 
     return ret;
 }
 
-int templateValRead( uint16_t *val )
+int templateValRead( uint32_t idx, uint32_t *val )
 {
     int ret = ERR_OK;
 
-    *val = templateVal;
+    if( idx >= TEMPLATE_CNT ) {
+        LOG_ERR( "Template index out of bounds" );
+        return -1;
+    }
+
+    *val = templates[idx].value;
 
     return ret;
 }
 
-int templateValWrite( uint16_t val )
+int templateValWrite( uint32_t idx, uint32_t val )
 {
     int ret = ERR_OK;
 
-    templateVal = val;
+    if( idx >= TEMPLATE_CNT ) {
+        LOG_ERR( "Template index out of bounds" );
+        return -1;
+    }
+
+    templates[idx].value = val;
 
     return ret;
 }
 
-int templateValZbusPublish( void )
+int templateValZbusPublish( uint32_t idx )
 {
     int ret = ERR_OK;
     ZbusMsgTemplate templateMsg = { 0 };
+    templateMsg.type = idx;
 
-    ret = templateValRead( &templateMsg.val );
+    ret = templateValRead( idx, &templateMsg.val );
     if( ret < ERR_OK ) {
         LOG_ERR( "Failed to read val: %d\n", ret );
         return ret;
