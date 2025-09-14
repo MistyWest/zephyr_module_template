@@ -168,4 +168,4 @@ SHELL_STATIC_SUBCMD_SET_CREATE( sub_list,
     SHELL_SUBCMD_SET_END );
 // clang-format on
 
-SHELL_CMD_REGISTER( template, &sub_list, "Template Commands", NULL );
+SHELL_CMD_REGISTER( mw_template, &sub_list, "Template Commands", NULL );
