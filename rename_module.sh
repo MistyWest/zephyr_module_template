@@ -35,17 +35,6 @@ fi
 cd "$TOP_LVL_DIR" || { echo "❌ Cannot cd to $TOP_LVL_DIR"; exit 1; }
 
 
-#### Rename Dir #####################################################################################################
-
-
-# Rename template/
-if [ ! -d "../${DFLT_MODULE_NAME}" ]; then
-    echo "❌ Error: dir '../${DFLT_MODULE_NAME}' does not exist in $TOP_LVL_DIR"
-    exit 1
-fi
-mv "../${DFLT_MODULE_NAME}" "../${NEW_MODULE_NAME_LWR_CML_CASE}"
-echo "✅ Renamed: ../${DFLT_MODULE_NAME} ➝ ../${NEW_MODULE_NAME_LWR_CML_CASE}"
-
 #### Rename Files #####################################################################################################
 
 
@@ -267,3 +256,7 @@ grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "mw_${DFLT_MODULE_NAME}
 # Replace all occurrences of 'misty,template'
 echo "🔁 Replacing all occurrences of 'misty,${DFLT_MODULE_NAME}' with 'misty,${NEW_MODULE_NAME_LWR_CASE}' (excluding .git)..."
 grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "misty,${DFLT_MODULE_NAME}" | xargs sed -i "s/misty,${DFLT_MODULE_NAME}/misty,${NEW_MODULE_NAME_LWR_CASE}/g"
+
+
+# One and done...
+rm rename_module.sh
