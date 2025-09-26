@@ -1,14 +1,14 @@
 compatible: "misty,template-instance"
 
-description: Individual template instance configuration.
+description: Individual instance configuration.
 
 properties:
   value:
     type: int
     required: true
-    description: Template Value.
+    description: Instance Value.
 
   label:
     type: string
     required: true
-    description: Human-readable name for this template value.
+    description: Human-readable name for this instance.
