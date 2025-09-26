@@ -134,7 +134,21 @@ fi
 mv "test/src/test${DFLT_MODULE_NAME^}.c" "test/src/test${NEW_MODULE_NAME_UPR_CML_CASE}.c"
 echo "✅ Renamed: test/src/test${DFLT_MODULE_NAME^}.c ➝ test/src/${NEW_MODULE_NAME_UPR_CML_CASE}.c"
 
+# Rename the dts/bindings/misty,template-group.yaml
+if [ ! -f "dts/bindings/misty,${DFLT_MODULE_NAME}-group.yaml" ]; then
+    echo "❌ Error: File 'dts/bindings/misty,${DFLT_MODULE_NAME}-group.yaml' does not exist"
+    exit 1
+fi
+mv "dts/bindings/misty,${DFLT_MODULE_NAME}-group.yaml" "dts/bindings/misty,${NEW_MODULE_NAME_LWR_CML_CASE}-group.yaml"
+echo "✅ Renamed: dts/bindings/misty,${DFLT_MODULE_NAME}-group.yaml ➝ dts/bindings/misty,${NEW_MODULE_NAME_LWR_CML_CASE}-group.yaml"
 
+# Rename the dts/bindings/misty,template-instance.yaml
+if [ ! -f "dts/bindings/misty,${DFLT_MODULE_NAME}-instance.yaml" ]; then
+    echo "❌ Error: File 'dts/bindings/misty,${DFLT_MODULE_NAME}-instance.yaml' does not exist"
+    exit 1
+fi
+mv "dts/bindings/misty,${DFLT_MODULE_NAME}-instance.yaml" "dts/bindings/misty,${NEW_MODULE_NAME_LWR_CML_CASE}-instance.yaml"
+echo "✅ Renamed: dts/bindings/misty,${DFLT_MODULE_NAME}-instance.yaml ➝ dts/bindings/misty,${NEW_MODULE_NAME_LWR_CML_CASE}-instance.yaml"
 
 #### Replace Text #####################################################################################################
 
@@ -236,5 +250,13 @@ echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}\.tester*' with '${N
 grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}\.tester" | xargs sed -i "s/${DFLT_MODULE_NAME}\.tester/${NEW_MODULE_NAME_LWR_CML_CASE}\.tester/g"
 
 # Replace all occurrences of shell_template with new_module_name
-echo "🔁 Replacing all occurrences of 'shell_${DFLT_MODULE_NAME}*' with '${NEW_MODULE_NAME_LWR_CASE}*' (excluding .git)..."
-grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "shell_${DFLT_MODULE_NAME}" | xargs sed -i "s/shell_${DFLT_MODULE_NAME}/${NEW_MODULE_NAME_LWR_CASE}/g"
+echo "🔁 Replacing all occurrences of 'mw_${DFLT_MODULE_NAME}*' with 'mw_${NEW_MODULE_NAME_LWR_CASE}*' (excluding .git)..."
+grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "mw_${DFLT_MODULE_NAME}" | xargs sed -i "s/mw_${DFLT_MODULE_NAME}/mw_${NEW_MODULE_NAME_LWR_CASE}/g"
+
+# Replace all occurrences of 'misty,template'
+echo "🔁 Replacing all occurrences of 'misty,${DFLT_MODULE_NAME}' with 'misty,${NEW_MODULE_NAME_LWR_CASE}' (excluding .git)..."
+grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "misty,${DFLT_MODULE_NAME}" | xargs sed -i "s/misty,${DFLT_MODULE_NAME}/misty,${NEW_MODULE_NAME_LWR_CASE}/g"
+
+
+# One and done...
+rm rename_module.sh

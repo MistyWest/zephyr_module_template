@@ -13,36 +13,36 @@
 	aliases {
 	};
 
-	val0: template00 {
+	mw_template0: template00 {
 		compatible = "misty,template-instance";
-		#value-cells = <0>;
+		#mw_template-cells = <0>;
 		label = "Value Zero";
 		value = <10>;
 	};
 
-	val1: template01 {
+	mw_template1: template01 {
 		compatible = "misty,template-instance";
-		#value-cells = <0>;
+		#mw_template-cells = <0>;
 		label = "Value One";
 		value = <20>;
 	};
 
-	val2: template02 {
+	mw_template2: template02 {
 		compatible = "misty,template-instance";
-		#value-cells = <0>;
+		#mw_template-cells = <0>;
 		label = "Value Two";
 		value = <30>;
 	};
 
-	val3: template03 {
+	mw_template3: template03 {
 		compatible = "misty,template-instance";
-		#value-cells = <0>;
+		#mw_template-cells = <0>;
 		label = "Value Three";
 		value = <40>;
 	};
 
-	values: template-group {
+	mw_templates: template-group {
 		compatible = "misty,template-group";
-		values = <&val0 &val1 &val2 &val3>;
+		mw_templates = <&mw_template0 &mw_template1 &mw_template2 &mw_template3>;
 	};
 };

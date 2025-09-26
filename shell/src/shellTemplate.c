@@ -20,8 +20,8 @@
 #include <zephyr/shell/shell.h>
 
 /**** Defines *********************************************************************************************************/
-#define TEMPLATE_GROUP_NODE DT_NODELABEL( values )
-#define TEMPLATE_CNT        DT_PROP_LEN( TEMPLATE_GROUP_NODE, values )
+#define TEMPLATE_GROUP_NODE DT_NODELABEL( mw_templates )
+#define TEMPLATE_CNT        DT_PROP_LEN( TEMPLATE_GROUP_NODE, mw_templates )
 
 /**** Types ***********************************************************************************************************/
 /**** Variables *******************************************************************************************************/

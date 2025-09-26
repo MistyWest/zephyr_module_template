@@ -1,9 +1,9 @@
 compatible: "misty,template-group"
 
-description: Template demo for passing multiple values to the template.
+description: Demo for passing multiple instances to module.
 
 properties:
-  values:
+  mw_templates:
     type: phandle-array
     required: true
-    description: Array of phandles to template-instance nodes.
+    description: Array of phandles to instance nodes.
