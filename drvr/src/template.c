@@ -18,9 +18,9 @@
 #include <zephyr/sys/util.h>
 
 /**** Defines *********************************************************************************************************/
-#define TEMPLATE_GROUP_NODE DT_NODELABEL( values )
-#define TEMPLATE_CNT        DT_PROP_LEN( TEMPLATE_GROUP_NODE, values )
-#define TEMPLATE_NODE( i )  DT_PHANDLE_BY_IDX( TEMPLATE_GROUP_NODE, values, i )
+#define TEMPLATE_GROUP_NODE DT_NODELABEL( mw_templates )
+#define TEMPLATE_CNT        DT_PROP_LEN( TEMPLATE_GROUP_NODE, mw_templates )
+#define TEMPLATE_NODE( i )  DT_PHANDLE_BY_IDX( TEMPLATE_GROUP_NODE, mw_templates, i )
 
 #define TEMPLATE_LABEL_GET( n, _ ) DT_PROP( TEMPLATE_NODE( n ), label ),
 #define TEMPLATE_VALUE_GET( n, _ ) DT_PROP( TEMPLATE_NODE( n ), value ),
