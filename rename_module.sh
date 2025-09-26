@@ -201,6 +201,18 @@ grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${WDT_FILE}${DFLT_MODU
 echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME^^}*' with '${NEW_MODULE_NAME_UPR_CASE}*' (excluding .git)..."
 grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME^^}" | xargs sed -i "s/${DFLT_MODULE_NAME^^}/${NEW_MODULE_NAME_UPR_CASE}/g"
 
+# Replace all occurrences of templates with newModuleNames
+echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}s*' with '${NEW_MODULE_NAME_LWR_CML_CASE}s*' (excluding .git)..."
+grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}s" | xargs sed -i "s/${DFLT_MODULE_NAME}s/${NEW_MODULE_NAME_LWR_CML_CASE}s/g"
+
+# Replace all occurrences of templateValues with newModuleNameValues
+echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}Values*' with '${NEW_MODULE_NAME_LWR_CML_CASE}Values*' (excluding .git)..."
+grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}Values" | xargs sed -i "s/${DFLT_MODULE_NAME}Values/${NEW_MODULE_NAME_LWR_CML_CASE}Values/g"
+
+# Replace all occurrences of templateLabels with newModuleNameLabels
+echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}Labels*' with '${NEW_MODULE_NAME_LWR_CML_CASE}Labels*' (excluding .git)..."
+grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}Labels" | xargs sed -i "s/${DFLT_MODULE_NAME}Labels/${NEW_MODULE_NAME_LWR_CML_CASE}Labels/g"
+
 # Replace all occurrences of module_main with new_module_name_main
 echo "🔁 Replacing all occurrences of '${DFLT_MODULE_NAME}_main*' with '${NEW_MODULE_NAME_LWR_CASE}_main*' (excluding .git)..."
 grep -rl --exclude-dir=.git --exclude="$(basename "$0")" "${DFLT_MODULE_NAME}_main" | xargs sed -i "s/${DFLT_MODULE_NAME}_main/${NEW_MODULE_NAME_LWR_CASE}_main/g"

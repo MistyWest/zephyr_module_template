@@ -47,7 +47,7 @@ int templateInit()
         template_t *temp = &templates[i];
         temp->value = templateValues[i];
         temp->label = templateLabels[i];
-        LOG_DBG( "Template(%d) %s init value %d", i, temp->label, temp->value );
+        LOG_DBG( "Value(%d) %s init value %d", i, temp->label, temp->value );
     }
 
     return ret;
@@ -58,7 +58,7 @@ int templateValRead( uint32_t idx, uint32_t *val )
     int ret = ERR_OK;
 
     if( idx >= TEMPLATE_CNT ) {
-        LOG_ERR( "Template index out of bounds" );
+        LOG_ERR( "Index out of bounds" );
         return -1;
     }
 
@@ -72,7 +72,7 @@ int templateValWrite( uint32_t idx, uint32_t val )
     int ret = ERR_OK;
 
     if( idx >= TEMPLATE_CNT ) {
-        LOG_ERR( "Template index out of bounds" );
+        LOG_ERR( "Index out of bounds" );
         return -1;
     }
 
