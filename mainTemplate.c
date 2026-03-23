@@ -42,26 +42,26 @@ static void templateMain( void )
     LOG_DBG( "Module Thread started" );
 
     ret = templateInit();
-    if( ret != ERR_OK ) {
+    if( ret != (int)ERR_OK ) {
         LOG_ERR( "Failed to init module: %d", ret );
         return;
     }
 
     ret = wdtTemplateInit();
-    if( ret != ERR_OK ) {
+    if( ret != (int)ERR_OK ) {
         LOG_ERR( "Failed to init time thread WDT: %d", ret );
         return;
     }
 
     while( true ) {
         ret = wdtTemplateFeed();
-        if( ret < ERR_OK ) {
+        if( ret < (int)ERR_OK ) {
             LOG_ERR( "Failed to feed the watchdog: %d", ret );
             return;
         }
 
         ret = msgqTemplateProc();
-        if( ret < ERR_OK ) {
+        if( ret < (int)ERR_OK ) {
             LOG_ERR( "Failed to process template msgq: %d", ret );
         }
     }

@@ -10,8 +10,8 @@
  */
 
 /**** Includes ********************************************************************************************************/
-#include "msgqTemplate.h"
 #include "error.h"
+#include "msgqTemplate.h"
 #include "template.h"
 #include <zephyr/logging/log.h>
 
@@ -49,13 +49,13 @@ int msgqTemplateProc( void )
     switch( msgq.type ) {
     case MSGQ_TYPE_ZBUS_TEMPLATE_VAL_SET:
         ret = templateValWrite( msgq.msg.zbus.msg.template.type, msgq.msg.zbus.msg.template.val );
-        if( ret != ERR_OK ) {
+        if( ret != (int)ERR_OK ) {
             LOG_ERR( "Error Setting Template Val received from Zbus" );
         }
         break;
     case MSGQ_TYPE_ZBUS_TEMPLATE_VAL_PUB:
         ret = templateValZbusPublish( msgq.msg.zbus.msg.template.type );
-        if( ret != ERR_OK ) {
+        if( ret != (int)ERR_OK ) {
             LOG_ERR( "Error Publishing Template Val to Zbus" );
         }
         break;

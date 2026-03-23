@@ -18,7 +18,6 @@
 /**** Types ***********************************************************************************************************/
 /**** Variables *******************************************************************************************************/
 static int wdtTaskId = -1;
-static const uint32_t wdtTimeoutMs = ( CONFIG_APP_TEMPLATE_WDT_TIMEOUT_S * MSEC_PER_SEC );
 
 /**** Macros **********************************************************************************************************/
 LOG_MODULE_DECLARE( template_main, CONFIG_APP_TEMPLATE_LOG_LEVEL );
@@ -42,12 +41,13 @@ void wdtTimeoutCb( int chanId, void *userData )
     LOG_ERR( "Watchdog expired, Channel: %d, Thread: %s", chanId, k_thread_name_get( (k_tid_t)userData ) );
 }
 
-int wdtTemplateInit()
+int wdtTemplateInit( void )
 {
     int ret = ERR_OK;
+    static const uint32_t wdtTimeoutMs = ( CONFIG_APP_TEMPLATE_WDT_TIMEOUT_S * MSEC_PER_SEC );
 
     ret = task_wdt_add( wdtTimeoutMs, wdtTimeoutCb, (void *)k_current_get() );
-    if( ret < ERR_OK ) {
+    if( ret < (int)ERR_OK ) {
         LOG_ERR( "Failed to add task to watchdog: %d", wdtTaskId );
         return ret;
     }
@@ -56,12 +56,12 @@ int wdtTemplateInit()
     return ERR_OK;
 }
 
-int wdtTemplateFeed()
+int wdtTemplateFeed( void )
 {
     int ret = ERR_OK;
 
     ret = task_wdt_feed( wdtTaskId );
-    if( ret < ERR_OK ) {
+    if( ret < (int)ERR_OK ) {
         LOG_ERR( "Failed to feed the watchdog: %d", ret );
         return ret;
     }

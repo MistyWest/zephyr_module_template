@@ -15,7 +15,6 @@
 
 /**** Includes ********************************************************************************************************/
 #include "zbusCommon.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <zephyr/shell/shell.h>
 
@@ -31,7 +30,7 @@ static bool zbusCbFired = false;
 
 /**** Prototypes ******************************************************************************************************/
 static void zbusListenerCb( const struct zbus_channel *chan );
-static int zbusListenerCbWait();
+static int zbusListenerCbWait( void );
 static int shellTemplateValRead( const struct shell *shell, size_t argc, char **argv );
 static int shellTemplateValWrite( const struct shell *shell, size_t argc, char **argv );
 static int shellTemplateTest( const struct shell *shell, size_t argc, char **argv );
@@ -55,7 +54,7 @@ void zbusListenerCb( const struct zbus_channel *chan )
     zbusCbFired = true;
 }
 
-int zbusListenerCbWait()
+int zbusListenerCbWait( void )
 {
     int16_t timeout = 1000;
 
@@ -73,16 +72,16 @@ static int shellTemplateValRead( const struct shell *shell, size_t argc, char **
 {
     shell_context = shell;
 
-    if( argc < 2 ) {
+    if( argc < 2U ) {
         shell_error( shell, "Usage: get <idx>" );
         return -EINVAL;
     }
 
     errno = 0;
     char *endptr;
-    uint32_t idx = (uint16_t)strtoul( argv[1], &endptr, 10 );
+    uint16_t idx = (uint16_t)strtoul( argv[1], &endptr, 10 );
 
-    if( errno != 0 || *endptr != '\0' ) {
+    if( (errno != 0) || (*endptr != '\0') ) {
         shell_error( shell, "Invalid idx: %s", argv[1] );
         return -EINVAL;
     }
@@ -91,7 +90,7 @@ static int shellTemplateValRead( const struct shell *shell, size_t argc, char **
     zbusMsg.type = idx;
 
     zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &zbusMsg, K_NO_WAIT );
-    if( zbusListenerCbWait() ) {
+    if( zbusListenerCbWait() != 0 ) {
         shell_print( shell_context, "Timeout, value not received\n" );
 
     } else {
@@ -105,23 +104,24 @@ static int shellTemplateValWrite( const struct shell *shell, size_t argc, char *
 {
     shell_context = shell;
 
-    if( argc < 3 ) {
+    if( argc < 3U ) {
         shell_error( shell, "Usage: set <idx> <val>" );
         return -EINVAL;
     }
 
     errno = 0;
     char *endptr;
-    uint32_t idx = (uint16_t)strtoul( argv[1], &endptr, 10 );
+    uint16_t idx = (uint16_t)strtoul( argv[1], &endptr, 10 );
 
-    if( errno != 0 || *endptr != '\0' ) {
+    if( (errno != 0) || (*endptr != '\0') ) {
         shell_error( shell, "Invalid idx: %s", argv[1] );
         return -EINVAL;
     }
 
-    uint32_t val = (uint16_t)strtoul( argv[2], &endptr, 10 );
+    errno = 0;
+    uint16_t val = (uint16_t)strtoul( argv[2], &endptr, 10 );
 
-    if( errno != 0 || *endptr != '\0' ) {
+    if( (errno != 0) || (*endptr != '\0') ) {
         shell_error( shell, "Invalid val: %s", argv[2] );
         return -EINVAL;
     }
@@ -137,6 +137,8 @@ static int shellTemplateValWrite( const struct shell *shell, size_t argc, char *
 static int shellTemplateTest( const struct shell *shell, size_t argc, char **argv )
 {
     shell_context = shell;
+    (void)argc;
+    (void)argv;
     bool status = true;
     ZbusMsgTemplate zbusMsg = { 0 };
 
@@ -146,7 +148,7 @@ static int shellTemplateTest( const struct shell *shell, size_t argc, char **arg
             zbusMsg.type = i;
             zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_SET, &zbusMsg, K_NO_WAIT );
             zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_PUB_REQ, &zbusMsg, K_NO_WAIT );
-            zbusListenerCbWait();
+            (void)zbusListenerCbWait();
 
             if( getVal != setVal ) {
                 status = false;

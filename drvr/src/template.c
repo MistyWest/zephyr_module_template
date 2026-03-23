@@ -10,8 +10,8 @@
  */
 
 /**** Includes ********************************************************************************************************/
-#include "template.h"
 #include "msgqTemplate.h"
+#include "template.h"
 #include "zbusCommon.h"
 #include <errno.h>
 #include <zephyr/logging/log.h>
@@ -29,19 +29,18 @@
 /**** Variables *******************************************************************************************************/
 static template_t templates[TEMPLATE_CNT] = { 0 };
 
-// grab individual button settings from the overlay config
-static const char *templateLabels[] = { LISTIFY( TEMPLATE_CNT, TEMPLATE_LABEL_GET, () ) };
-static const uint32_t templateValues[] = { LISTIFY( TEMPLATE_CNT, TEMPLATE_VALUE_GET, () ) };
-
 /**** Macros **********************************************************************************************************/
 LOG_MODULE_DECLARE( template_main, CONFIG_APP_TEMPLATE_LOG_LEVEL );
 
 /**** Prototypes ******************************************************************************************************/
 /**** Definitions *****************************************************************************************************/
 
-int templateInit()
+int templateInit( void )
 {
     int ret = ERR_OK;
+    // grab individual button settings from the overlay config
+    static const char *templateLabels[] = { LISTIFY( TEMPLATE_CNT, TEMPLATE_LABEL_GET, () ) };
+    static const uint32_t templateValues[] = { LISTIFY( TEMPLATE_CNT, TEMPLATE_VALUE_GET, () ) };
 
     for( int i = 0; i < TEMPLATE_CNT; i++ ) {
         template_t *temp = &templates[i];
@@ -88,13 +87,13 @@ int templateValZbusPublish( uint32_t idx )
     templateMsg.type = idx;
 
     ret = templateValRead( idx, &templateMsg.val );
-    if( ret < ERR_OK ) {
+    if( ret < (int)ERR_OK ) {
         LOG_ERR( "Failed to read val: %d\n", ret );
         return ret;
     }
 
     ret = zbus_chan_pub( &ZBUS_CHAN_TEMPLATE_VAL_SUB, &templateMsg, K_NO_WAIT );
-    if( ret < ERR_OK ) {
+    if( ret < (int)ERR_OK ) {
         LOG_ERR( "Failed to publish val: %d\n", ret );
         return ret;
     }

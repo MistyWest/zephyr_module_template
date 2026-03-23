@@ -66,9 +66,11 @@ void zbusListenerCb( const struct zbus_channel *chan )
         msgq.type = MSGQ_TYPE_ZBUS_TEMPLATE_VAL_PUB;
         msgq.msg.zbus.msg.template = *(ZbusMsgTemplate *)zbus_chan_const_msg( chan );
         ret = k_msgq_put( msgqTemplate(), &msgq, K_NO_WAIT );
+    } else {
+        /* no action */
     }
 
-    if( ret != ERR_OK ) {
+    if( ret != (int)ERR_OK ) {
         LOG_ERR( "ERR: Event queue full, dropping Zbus message" );
     }
 }
