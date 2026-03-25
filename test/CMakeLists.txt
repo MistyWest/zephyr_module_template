@@ -12,13 +12,13 @@ target_sources(app
 	../drvr/src/wdtTemplate.c
 	../drvr/src/template.c
 	../drvr/src/zbusTemplate.c
-	../../../common/zbusCommon.c
+	../../common/zbusCommon.c
 )
 
 zephyr_include_directories(${ZEPHYR_BASE}/include/zephyr/)
 zephyr_include_directories(${ZEPHYR_BASE}/subsys/testsuite/include)
 target_include_directories(app PRIVATE ../drvr/inc)
-target_include_directories(app PRIVATE ../../../common/inc)
+target_include_directories(app PRIVATE ../../common/inc)
 
 target_link_options(app PRIVATE --whole-archive)
 
